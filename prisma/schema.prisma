@@ -29,16 +29,16 @@ model CumRap {
 
 model DatVe {
   ma_dat_ve     Int       @id @default(autoincrement())
-  tai_khoan     Int
+  nguoi_dung_id Int
   ma_lich_chieu Int
   ma_ghe        Int
-  NguoiDung     NguoiDung @relation(fields: [tai_khoan], references: [tai_khoan], onDelete: NoAction, onUpdate: NoAction, map: "DatVe_ibfk_1")
+  NguoiDung     NguoiDung @relation(fields: [nguoi_dung_id], references: [nguoi_dung_id], onDelete: NoAction, onUpdate: NoAction, map: "DatVe_ibfk_1")
   LichChieu     LichChieu @relation(fields: [ma_lich_chieu], references: [ma_lich_chieu], onDelete: NoAction, onUpdate: NoAction, map: "DatVe_ibfk_2")
   Ghe           Ghe       @relation(fields: [ma_ghe], references: [ma_ghe], onDelete: NoAction, onUpdate: NoAction, map: "DatVe_ibfk_3")
 
   @@index([ma_ghe], map: "ma_ghe")
   @@index([ma_lich_chieu], map: "ma_lich_chieu")
-  @@index([tai_khoan], map: "tai_khoan")
+  @@index([nguoi_dung_id], map: "nguoi_dung_id")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -76,7 +76,8 @@ model LichChieu {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model NguoiDung {
-  tai_khoan       Int     @id @default(autoincrement())
+  nguoi_dung_id   Int     @id @default(autoincrement())
+  tai_khoan       String  @db.VarChar(255)
   ho_ten          String  @db.VarChar(255)
   email           String  @db.VarChar(255)
   so_dt           String? @db.VarChar(255)
