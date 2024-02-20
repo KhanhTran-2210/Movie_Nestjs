@@ -13,6 +13,7 @@ import { CinemaModule } from './cinema/cinema.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('users/profile');
+    consumer.apply(AuthMiddleware).forRoutes(UserController);
   }
 }

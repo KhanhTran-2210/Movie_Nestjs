@@ -6,11 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Ticket')
 @Controller('ticket')
@@ -21,10 +22,14 @@ export class TicketController {
   create(@Body() createTicketDto: CreateTicketDto) {
     return this.ticketService.create(createTicketDto);
   }
-
-  @Get()
-  findAll() {
-    return this.ticketService.findAll();
+  @ApiQuery({
+    name: 'showtime id',
+    required: false,
+    description: 'Showtime id is here',
+  })
+  @Get('get-showtime')
+  findAll(@Query('showtime') showtime?: number): Promise<any> {
+    return this.ticketService.findAll(showtime);
   }
 
   @Get(':id')

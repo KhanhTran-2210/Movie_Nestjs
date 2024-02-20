@@ -1,15 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class TicketService {
+  prisma = new PrismaClient();
   create(createTicketDto: CreateTicketDto) {
     return 'This action adds a new ticket';
   }
 
-  findAll() {
-    return `This action returns all ticket`;
+  async findAll(showtime?: number): Promise<any> {
+    if (showtime) {
+      const data = await this.prisma.lichChieu.findUnique({
+        where: { ma_lich_chieu: +showtime },
+        include: {
+          phim: true,
+          RapPhim: true,
+        },
+      });
+      if (!data) {
+        return 'Showtime id is not exist';
+      }
+      return data;
+    } else {
+      const data = await this.prisma.lichChieu.findMany({
+        include: {
+          phim: true,
+          RapPhim: true,
+        },
+      });
+      return data;
+    }
   }
 
   findOne(id: number) {

@@ -44,7 +44,6 @@ export class UserController {
     required: false,
     description: 'filter by ho_ten',
   })
-  @UseGuards(AuthGuard('jwt'))
   @Get('get-users')
   findAll(
     @Query('page') page?: number,
@@ -64,16 +63,18 @@ export class UserController {
       return this.userService.findAll();
     }
   }
-  @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
+  // @UseGuards(AuthGuard('jwt'))
+  @Get('details/:id')
   findOne(@Param('id') id: number): Promise<any> {
     return this.userService.findOne(id);
   }
-  // @Get('profile')
-  // getProfile(@Req() req: Request) {
-  //   const user = req.user;
-  //   return { user };
-  // }
+
+  @Get('profile')
+  getProfile(@Req() req: Request) {
+    // console.log(req.user);
+    //const user = req.user;
+    return 1;
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Put('update/:id')

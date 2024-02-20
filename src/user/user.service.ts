@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import signUpDTO from './dto/signup.dto';
+import { equal } from 'assert';
 
 @Injectable()
 export class UserService {
@@ -27,6 +28,7 @@ export class UserService {
       let isCorrectPass = bcrypt.compareSync(mat_khau, checkUser.mat_khau);
       if (isCorrectPass) {
         let payload = {
+          nguoi_dung_id: checkUser.nguoi_dung_id,
           tai_khoan: checkUser.tai_khoan,
           email: checkUser.email,
           loai_nguoi_dung: checkUser.loai_nguoi_dung,
@@ -97,21 +99,23 @@ export class UserService {
   }
 
   async searchByName(name: string): Promise<any> {
-    return await this.prisma.nguoiDung.findMany({
+    const data = await this.prisma.nguoiDung.findMany({
       where: {
         ho_ten: {
           contains: name,
         },
       },
     });
+    return data;
   }
 
   async findOne(id: number): Promise<any> {
-    return await this.prisma.nguoiDung.findUnique({
+    const data = await this.prisma.nguoiDung.findUnique({
       where: { nguoi_dung_id: +id },
     });
+    return data;
   }
-  // getUserProfile(req: Request): any {
+  // getUserProfile(@Req req: Request) {
   //   return req.user;
   // }
 
