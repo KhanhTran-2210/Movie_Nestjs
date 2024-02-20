@@ -66,32 +66,86 @@ export class UserService {
     }
     return 'User is created';
   }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    const { mat_khau, ...rest } = createUserDto;
+    const hashedPassword = await bcrypt.hashSync(mat_khau, 10);
+    const newUser = {
+      ...rest,
+      mat_khau: hashedPassword,
+    };
+    await this.prisma.nguoiDung.create({
+      data: newUser,
+    });
+    return 'Create successfully';
   }
 
-  async findAll(skip: number, numSize: number, filter: string): Promise<any> {
-    let data = await this.prisma.nguoiDung.findMany({
+  async findAll(): Promise<any> {
+    return await this.prisma.nguoiDung.findMany();
+  }
+
+  async findAllByPage(page: number, size: number, name?: string): Promise<any> {
+    const skip = (page - 1) * size;
+    const whereClause: any = {};
+    if (name) {
+      whereClause.ho_ten = { contains: name };
+    }
+    return await this.prisma.nguoiDung.findMany({
+      where: whereClause,
+      skip,
+      take: +size,
+    });
+  }
+
+  async searchByName(name: string): Promise<any> {
+    return await this.prisma.nguoiDung.findMany({
       where: {
         ho_ten: {
-          contains: filter,
+          contains: name,
         },
       },
-      skip: skip,
-      take: numSize,
     });
-    return data;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<any> {
+    return await this.prisma.nguoiDung.findUnique({
+      where: { nguoi_dung_id: +id },
+    });
+  }
+  // getUserProfile(req: Request): any {
+  //   return req.user;
+  // }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
+    const user = await this.prisma.nguoiDung.findUnique({
+      where: { nguoi_dung_id: id },
+    });
+    if (!user) {
+      return `User with ID ${id} not found`;
+    }
+    if (updateUserDto.mat_khau) {
+      const hashedPassword = await bcrypt.hashSync(updateUserDto.mat_khau, 10);
+
+      updateUserDto.mat_khau = hashedPassword;
+    }
+    const updatedUser = await this.prisma.nguoiDung.update({
+      where: { nguoi_dung_id: id },
+      data: updateUserDto,
+    });
+
+    return updatedUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(userId: number): Promise<any> {
+    await this.prisma.datVe.deleteMany({
+      where: {
+        nguoi_dung_id: +userId,
+      },
+    });
+    await this.prisma.nguoiDung.delete({
+      where: {
+        nguoi_dung_id: +userId,
+      },
+    });
+    return 'Remove user successfully';
   }
 }
