@@ -7,7 +7,6 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import signUpDTO from './dto/signup.dto';
-import { equal } from 'assert';
 
 @Injectable()
 export class UserService {
@@ -37,7 +36,7 @@ export class UserService {
           secret: this.configService.get<string>('SECRET_KEY'),
           expiresIn: this.configService.get<string>('EXPIRES_IN'),
         });
-        return token;
+        return `Token: ${token}`;
       }
       return 'Password incorrect';
     }
@@ -113,18 +112,21 @@ export class UserService {
     const data = await this.prisma.nguoiDung.findUnique({
       where: { nguoi_dung_id: +id },
     });
+    if (!data) {
+      return `User id ${id} is not exist`;
+    }
     return data;
   }
   // getUserProfile(@Req req: Request) {
   //   return req.user;
   // }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
+  async update(userId: number, updateUserDto: UpdateUserDto): Promise<any> {
     const user = await this.prisma.nguoiDung.findUnique({
-      where: { nguoi_dung_id: id },
+      where: { nguoi_dung_id: userId },
     });
     if (!user) {
-      return `User with ID ${id} not found`;
+      return `User ID ${userId} is not exist`;
     }
     if (updateUserDto.mat_khau) {
       const hashedPassword = await bcrypt.hashSync(updateUserDto.mat_khau, 10);
@@ -132,7 +134,7 @@ export class UserService {
       updateUserDto.mat_khau = hashedPassword;
     }
     const updatedUser = await this.prisma.nguoiDung.update({
-      where: { nguoi_dung_id: id },
+      where: { nguoi_dung_id: userId },
       data: updateUserDto,
     });
 
@@ -140,16 +142,12 @@ export class UserService {
   }
 
   async remove(userId: number): Promise<any> {
-    await this.prisma.datVe.deleteMany({
-      where: {
-        nguoi_dung_id: +userId,
-      },
-    });
     await this.prisma.nguoiDung.delete({
       where: {
         nguoi_dung_id: +userId,
       },
     });
+
     return 'Remove user successfully';
   }
 }

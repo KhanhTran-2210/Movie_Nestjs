@@ -16,7 +16,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import loginDTO from './dto/login.dto';
 import signUpDTO from './dto/signup.dto';
-import { ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
@@ -33,6 +33,9 @@ export class UserController {
   signUp(@Body() body: signUpDTO): Promise<any> {
     return this.userService.signUp(body);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Post('/add-user')
   create(@Body() createUserDto: CreateUserDto): Promise<any> {
     return this.userService.create(createUserDto);
@@ -63,25 +66,31 @@ export class UserController {
       return this.userService.findAll();
     }
   }
-  // @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Get('details/:id')
   findOne(@Param('id') id: number): Promise<any> {
     return this.userService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @Get('profile')
   getProfile(@Req() req: Request) {
-    // console.log(req.user);
-    //const user = req.user;
-    return 1;
+    const user = req.user;
+    return user;
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Put('update/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @ApiBearerAuth()
+  @ApiParam({ name: 'userId', required: true })
+  @Put('update/:userId')
+  update(@Param('userId') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiParam({ name: 'userId', required: true })
   @Delete('/remove/:userId')
   remove(@Param('userId') userId: number): Promise<any> {
     return this.userService.remove(userId);

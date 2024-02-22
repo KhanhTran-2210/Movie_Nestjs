@@ -12,8 +12,9 @@ import { TicketModule } from './ticket/ticket.module';
 import { CinemaModule } from './cinema/cinema.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthMiddleware } from './middleware/auth.middleware';
+
 import { UserController } from './user/user.controller';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -33,6 +34,6 @@ import { UserController } from './user/user.controller';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(UserController);
+    consumer.apply(AuthMiddleware).forRoutes('user/profile');
   }
 }
