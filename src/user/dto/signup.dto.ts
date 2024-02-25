@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto {
+export default class signUpDTO {
   @ApiProperty({ description: 'tai_khoan', type: String })
   tai_khoan: string;
   @ApiProperty({ description: 'ho_ten', type: String })
@@ -11,6 +11,5 @@ export class CreateUserDto {
   so_dt: string;
   @ApiProperty({ description: 'mat_khau', type: String })
   mat_khau: string;
-  @ApiProperty({ description: 'loai_nguoi_dung', type: String })
   loai_nguoi_dung: string;
 }

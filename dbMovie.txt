@@ -4,6 +4,7 @@ CREATE TABLE phim (
   ma_phim INT PRIMARY KEY AUTO_INCREMENT,
   ten_phim VARCHAR(255) NOT NULL,
   trailer VARCHAR(255) NULL,
+  hinh_anh VARCHAR(255),
   mo_ta VARCHAR(255) NULL,
   ngay_khoi_chieu DATE NULL,
   danh_gia INT NULL,
@@ -11,23 +12,24 @@ CREATE TABLE phim (
   dang_chieu BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-INSERT INTO phim (ten_phim, trailer, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu)
+INSERT INTO phim (ten_phim, trailer, hinh_anh, mo_ta, ngay_khoi_chieu, danh_gia, hot, dang_chieu)
 VALUES
-  ('Ten Phim 1', 'https://www.youtube.com/trailer1', 'Mo ta cho phim 1', '2024-01-01', 8, TRUE, TRUE),
-  ('Ten Phim 2', 'https://www.youtube.com/trailer2', 'Mo ta cho phim 2', '2024-02-01', 7, FALSE, TRUE),
-  ('Ten Phim 3', 'https://www.youtube.com/trailer3', 'Mo ta cho phim 3', '2024-03-01', 9, TRUE, FALSE),
-  ('Ten Phim 4', 'https://www.youtube.com/trailer4', 'Mo ta cho phim 4', '2024-04-01', 6, FALSE, TRUE),
-  ('Ten Phim 5', 'https://www.youtube.com/trailer5', 'Mo ta cho phim 5', '2024-05-01', 8, TRUE, FALSE),
-  ('Ten Phim 6', 'https://www.youtube.com/trailer6', 'Mo ta cho phim 6', '2024-06-01', 7, FALSE, TRUE),
-  ('Ten Phim 7', 'https://www.youtube.com/trailer7', 'Mo ta cho phim 7', '2024-07-01', 9, TRUE, FALSE),
-  ('Ten Phim 8', 'https://www.youtube.com/trailer8', 'Mo ta cho phim 8', '2024-08-01', 6, FALSE, TRUE),
-  ('Ten Phim 9', 'https://www.youtube.com/trailer9', 'Mo ta cho phim 9', '2024-09-01', 8, TRUE, FALSE),
-  ('Ten Phim 10', 'https://www.youtube.com/trailer10', 'Mo ta cho phim 10', '2024-10-01', 7, FALSE, TRUE);
+  ('Ten Phim 1', 'https://www.youtube.com/trailer1', "phim1.png", 'Mo ta cho phim 1', '2024-01-01', 8, TRUE, TRUE),
+  ('Ten Phim 2', 'https://www.youtube.com/trailer2', "phim2.png", 'Mo ta cho phim 2', '2024-02-01', 7, FALSE, TRUE),
+  ('Ten Phim 3', 'https://www.youtube.com/trailer3', "phim3.png", 'Mo ta cho phim 3', '2024-03-01', 9, TRUE, FALSE),
+  ('Ten Phim 4', 'https://www.youtube.com/trailer4', "phim4.png", 'Mo ta cho phim 4', '2024-04-01', 6, FALSE, TRUE),
+  ('Ten Phim 5', 'https://www.youtube.com/trailer5', "phim5.png", 'Mo ta cho phim 5', '2024-05-01', 8, TRUE, FALSE),
+  ('Ten Phim 6', 'https://www.youtube.com/trailer6', "phim6.png", 'Mo ta cho phim 6', '2024-06-01', 7, FALSE, TRUE),
+  ('Ten Phim 7', 'https://www.youtube.com/trailer7', "phim7.png", 'Mo ta cho phim 7', '2024-07-01', 9, TRUE, FALSE),
+  ('Ten Phim 8', 'https://www.youtube.com/trailer8', "phim8.png", 'Mo ta cho phim 8', '2024-08-01', 6, FALSE, TRUE),
+  ('Ten Phim 9', 'https://www.youtube.com/trailer9', "phim9.png", 'Mo ta cho phim 9', '2024-09-01', 8, TRUE, FALSE),
+  ('Ten Phim 10', 'https://www.youtube.com/trailer10', "phim10.png", 'Mo ta cho phim 10', '2024-10-01', 7, FALSE, TRUE);
   
 --nguoi_dung
 
 CREATE TABLE NguoiDung (
-  tai_khoan INT PRIMARY KEY AUTO_INCREMENT,
+  nguoi_dung_id INT PRIMARY KEY AUTO_INCREMENT,
+  tai_khoan VARCHAR(255) NOT NULL,
   ho_ten VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   so_dt VARCHAR(255) NULL,
@@ -35,25 +37,31 @@ CREATE TABLE NguoiDung (
   loai_nguoi_dung VARCHAR(255) NOT NULL CHECK (loai_nguoi_dung IN ('user', 'admin'))
 );
 
-INSERT INTO NguoiDung (ho_ten, email, so_dt, mat_khau, loai_nguoi_dung)
-VALUES
-  ('Admin 1', 'admin1@example.com', '123456789', 'adminpassword1', 'admin'),
-  ('User 1', 'user1@example.com', '987654321', 'userpassword1', 'user'),
-  ('User 2', 'user2@example.com', '555555555', 'userpassword2', 'user'),
-  ('Admin 2', 'admin2@example.com', '111111111', 'adminpassword2', 'admin'),
-  ('User 3', 'user3@example.com', '999999999', 'userpassword3', 'user'),
-  ('Admin 3', 'admin3@example.com', '777777777', 'adminpassword3', 'admin'),
-  ('User 4', 'user4@example.com', '333333333', 'userpassword4', 'user'),
-  ('Admin 4', 'admin4@example.com', '444444444', 'adminpassword4', 'admin'),
-  ('User 5', 'user5@example.com', '666666666', 'userpassword5', 'user'),
-  ('Admin 5', 'admin5@example.com', '222222222', 'adminpassword5', 'admin');
+
+
+INSERT INTO NguoiDung (tai_khoan, ho_ten, email, so_dt, mat_khau, loai_nguoi_dung)
+SELECT 
+    CONCAT('user', id),
+    CONCAT('Người Dùng ', id),
+    CONCAT('user', id, '@example.com'),
+    CONCAT('0123456789', FLOOR(RAND() * 1000000000)),
+    MD5(RAND()),
+    IF(id % 2 = 0, 'admin', 'user')
+FROM (
+    SELECT (a.N + b.N * 10 + c.N * 100) AS id
+    FROM
+        (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) a,
+        (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
+        (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) c
+    LIMIT 30
+) AS numbers;
   
 --Banner 
   CREATE TABLE Banner (
   ma_banner INT PRIMARY KEY AUTO_INCREMENT,
   ma_phim INT NOT NULL,
   hinh_anh VARCHAR(255) NOT NULL,
-  FOREIGN KEY (ma_phim) REFERENCES phim(ma_phim)
+  FOREIGN KEY (ma_phim) REFERENCES phim(ma_phim) ON DELETE CASCADE
 );
 
 INSERT INTO Banner (ma_phim, hinh_anh)
@@ -91,7 +99,7 @@ CREATE TABLE CumRap (
  ten_cum_rap VARCHAR(255),
  dia_chi VARCHAR(255),
  ma_he_thong_rap INT,
- FOREIGN KEY (ma_he_thong_rap) REFERENCES HeThongRap(ma_he_thong_rap)
+ FOREIGN KEY (ma_he_thong_rap) REFERENCES HeThongRap(ma_he_thong_rap) ON DELETE CASCADE
 )
 
 INSERT INTO CumRap (ten_cum_rap, dia_chi, ma_he_thong_rap)
@@ -114,7 +122,7 @@ CREATE TABLE RapPhim (
  ma_rap INT PRIMARY KEY AUTO_INCREMENT,
  ten_rap VARCHAR(255),
  ma_cum_rap INT,
- FOREIGN KEY (ma_cum_rap) REFERENCES CumRap(ma_cum_rap)
+ FOREIGN KEY (ma_cum_rap) REFERENCES CumRap(ma_cum_rap) ON DELETE CASCADE
 )
 
 INSERT INTO RapPhim (ten_rap, ma_cum_rap)
@@ -136,7 +144,7 @@ CREATE TABLE Ghe (
   ten_ghe VARCHAR(255) NOT NULL,
   loai_ghe VARCHAR(255) NOT NULL CHECK (loai_ghe IN ('VIP', 'THUONG')),
   ma_rap INT,
-  FOREIGN KEY (ma_rap) REFERENCES RapPhim(ma_rap)
+  FOREIGN KEY (ma_rap) REFERENCES RapPhim(ma_rap) ON DELETE CASCADE
 );
 
 INSERT INTO Ghe (ten_ghe, loai_ghe, ma_rap)
@@ -163,8 +171,8 @@ CREATE TABLE LichChieu (
   ma_rap INT NOT NULL,
   ngay_gio_chieu DATETIME NOT NULL,
   gia_ve INT NOT NULL,
-  FOREIGN KEY (ma_phim) REFERENCES phim(ma_phim),
-  FOREIGN KEY (ma_rap) REFERENCES RapPhim(ma_rap)
+  FOREIGN KEY (ma_phim) REFERENCES phim(ma_phim) ON DELETE CASCADE,
+  FOREIGN KEY (ma_rap) REFERENCES RapPhim(ma_rap) ON DELETE CASCADE
 );
 
 INSERT INTO LichChieu (ma_phim, ma_rap, ngay_gio_chieu, gia_ve)
@@ -185,16 +193,16 @@ FROM (
 --DatVe
 CREATE TABLE DatVe (
   ma_dat_ve INT PRIMARY KEY AUTO_INCREMENT,
-  tai_khoan INT NOT NULL,
+  nguoi_dung_id INT NOT NULL,
   ma_lich_chieu INT NOT NULL,
   ma_ghe INT NOT NULL,
-  FOREIGN KEY (tai_khoan) REFERENCES NguoiDung(tai_khoan),
-  FOREIGN KEY (ma_lich_chieu) REFERENCES LichChieu(ma_lich_chieu),
-  FOREIGN KEY (ma_ghe) REFERENCES Ghe(ma_ghe)
+  FOREIGN KEY (nguoi_dung_id) REFERENCES NguoiDung(nguoi_dung_id) ON DELETE CASCADE,
+  FOREIGN KEY (ma_lich_chieu) REFERENCES LichChieu(ma_lich_chieu) ON DELETE CASCADE,
+  FOREIGN KEY (ma_ghe) REFERENCES Ghe(ma_ghe) ON DELETE CASCADE
 );
-INSERT INTO DatVe (tai_khoan, ma_lich_chieu, ma_ghe)
+INSERT INTO DatVe (nguoi_dung_id, ma_lich_chieu, ma_ghe)
 SELECT
-    FLOOR(RAND() * 10) + 1,                
+    FLOOR(RAND() * 30) + 1,                
     FLOOR(RAND() * 80) + 1,                
     FLOOR(RAND() * 100) + 1                 
 FROM (
@@ -204,7 +212,9 @@ FROM (
         (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) b,
         (SELECT 0 AS N UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) c
     LIMIT 200
-) AS numbers;
+) AS numbers; 
+
+
 
 
 
