@@ -88,11 +88,13 @@ export class MovieService {
     return data;
   }
 
-  async remove(id: number) {
-    let data = await this.prisma.phim.findFirst({
-
+  async remove(maPhim: string) {
+    await this.prisma.phim.delete({
+      where: {
+        ma_phim: Number(maPhim)
+      }
     })
-    return data;
+    return "Remove film successfull";
   }
   async layDanhSachBanner() {
     try {

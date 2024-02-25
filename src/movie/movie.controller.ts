@@ -36,8 +36,8 @@ export class MovieController {
     return this.movieService.findOne(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.movieService.remove(+id);
+  @Delete('/XoaPhim')
+  remove(@Query('maPhim') maPhim: string) {
+    return this.movieService.remove(maPhim);
   }
 }
