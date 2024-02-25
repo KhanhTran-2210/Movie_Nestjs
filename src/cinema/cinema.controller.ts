@@ -22,11 +22,23 @@ export class CinemaController {
     return this.cinemaService.create(createCinemaDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cinemaService.findAll();
+  @Get("/layThongTinHeThongRap")
+  layThongTinHeThongRap() {
+    return this.cinemaService.layThongTinHeThongRap();
   }
-
+  @Get("/layThongTinCumRapTheoHeThong")
+  layThongTinCumRapTheoHeThong(){
+    return this.cinemaService.layThongTinCumRapTheoHeThong()
+  }
+  @Get("/layThongTinLichChieuHeThongRap")
+  layThongTinLichChieuHeThongRap(){
+    return this.cinemaService.layThongTinLichChieuHeThongRap()
+  }
+  @Get("/layThongTinLichChieuPhim")
+  layThongTinLichChieuPhim(){
+    return this.cinemaService.layThongTinLichChieuPhim()
+  }
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cinemaService.findOne(+id);
