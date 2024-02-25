@@ -1,26 +1,106 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { PrismaClient } from '@prisma/client'
 
 @Injectable()
 export class MovieService {
-  create(createMovieDto: CreateMovieDto) {
-    return 'This action adds a new movie';
+  prisma = new PrismaClient()
+
+  async create(createMovieDto) {
+    try {
+      let createMovie = await this.prisma.phim.create({
+        data: createMovieDto
+      })
+      return createMovie;
+    } catch (error) {
+      return error;
+    }
   }
 
-  findAll() {
-    return `This action returns all movie`;
+  async findAll(tenPhim, soTrang, soPhanTuTrenTrang) {
+    try {
+      if (soTrang && soPhanTuTrenTrang) {
+        let index = (Number(soTrang) - 1) * Number(soPhanTuTrenTrang);
+        let data = await this.prisma.phim.findMany({
+          skip: index,
+          take: Number(soPhanTuTrenTrang),
+          where: {
+            ten_phim: {
+              contains: tenPhim
+            }
+          }
+        })
+        return data;
+      } else {
+        let data = await this.prisma.phim.findMany({
+          where: {
+            ten_phim: {
+              contains: tenPhim
+            }
+          }
+        });
+        return data;
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+  async findAllFilm(tenPhim, tuNgay, denNgay) {
+    try {
+      if (tuNgay && denNgay) {
+
+        let data = await this.prisma.phim.findMany({
+          where: {
+            ten_phim: {
+              contains: tenPhim
+            },
+            ngay_khoi_chieu: {
+              gte: new Date(tuNgay),
+              lte: new Date(denNgay)
+            }
+          }
+
+        })
+        return data;
+      } else {
+        let data = await this.prisma.phim.findMany({
+          where: {
+            ten_phim: {
+              contains: ""
+            }
+          }
+        });
+        return data;
+      }
+    } catch (error) {
+
+    }
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movie`;
+  async findOne(id: number) {
+    let data = await this.prisma.phim.findFirst({
+      where: {
+        ma_phim: id
+      }
+    })
+    return data;
   }
 
-  update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+  async remove(id: number) {
+    let data = await this.prisma.phim.findFirst({
+
+    })
+    return data;
+  }
+  async layDanhSachBanner() {
+    try {
+      let data = await this.prisma.banner.findMany();
+      return data;
+    } catch (error) {
+      return error
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movie`;
-  }
 }
