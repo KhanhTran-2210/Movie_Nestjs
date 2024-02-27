@@ -1,16 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Movie')
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Post("/taoPhim")
-  create(@Body() createMovieDto) {
+  create(@Body() createMovieDto: CreateMovieDto) {
     return this.movieService.create(createMovieDto);
   }
 

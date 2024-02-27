@@ -43,6 +43,7 @@ export class UserService {
     return 'User is not exist';
   }
   async signUp(body: signUpDTO): Promise<any> {
+    console.log("check")
     let { tai_khoan, ho_ten, email, so_dt, mat_khau, loai_nguoi_dung } = body;
     let checkUser = await this.prisma.nguoiDung.findFirst({
       where: {

@@ -8,9 +8,14 @@ export class MovieService {
   prisma = new PrismaClient()
 
   async create(createMovieDto) {
+    let ngay_khoi_chieu = createMovieDto.ngay_khoi_chieu;
+    let newMovie = {
+      ...createMovieDto,
+      ngay_khoi_chieu: new Date(ngay_khoi_chieu)
+    }
     try {
       let createMovie = await this.prisma.phim.create({
-        data: createMovieDto
+        data: newMovie
       })
       return createMovie;
     } catch (error) {
