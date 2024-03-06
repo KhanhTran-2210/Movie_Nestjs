@@ -39,8 +39,11 @@ export class MovieController {
     return this.movieService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   @Delete('/XoaPhim')
   remove(@Query('maPhim') maPhim: string) {
+
     return this.movieService.remove(maPhim);
   }
 }

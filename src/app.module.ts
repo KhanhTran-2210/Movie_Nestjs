@@ -15,6 +15,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { UserController } from './user/user.controller';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { CheckRoleAdminMiddleware } from './middleware/check_role_admin.middleware';
 
 @Module({
   imports: [
@@ -35,5 +36,6 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('user/profile');
+    consumer.apply(AuthMiddleware, CheckRoleAdminMiddleware).forRoutes('movie/XoaPhim')
   }
 }

@@ -6,7 +6,7 @@ import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: any, res: Response, next: NextFunction) {
     // Lấy token từ header Authorization
     const token = req.headers.authorization?.split(' ')[1];
     const secret = process.env.SECRET_KEY;
