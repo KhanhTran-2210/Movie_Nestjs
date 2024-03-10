@@ -23,6 +23,24 @@ export class MovieService {
     }
   }
 
+  async uploadHinh(file, body){
+    try {
+      let originalName = file.originalname;
+      let maPhim = Number(body.maPhim);
+      await this.prisma.phim.update({
+        where: {
+          ma_phim: maPhim
+        },
+        data: {
+          hinh_anh: originalName
+        }
+      })
+      return "Upload image film successfull!"
+    } catch (error) {
+      return "Upload image film fail"
+    }
+  }
+
   async findAll(tenPhim, soTrang, soPhanTuTrenTrang) {
     try {
       if (soTrang && soPhanTuTrenTrang) {

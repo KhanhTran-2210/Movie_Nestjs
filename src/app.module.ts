@@ -37,5 +37,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('user/profile');
     consumer.apply(AuthMiddleware, CheckRoleAdminMiddleware).forRoutes('movie/XoaPhim')
+    consumer.apply(AuthMiddleware, CheckRoleAdminMiddleware).forRoutes('movie/UploadHinhAnh')
   }
 }

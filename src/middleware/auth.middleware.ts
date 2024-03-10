@@ -9,6 +9,7 @@ export class AuthMiddleware implements NestMiddleware {
   use(req: any, res: Response, next: NextFunction) {
     // Lấy token từ header Authorization
     const token = req.headers.authorization?.split(' ')[1];
+    console.log(token)
     const secret = process.env.SECRET_KEY;
 
     if (token) {

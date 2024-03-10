@@ -17,11 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Invalid token');
     }
     // Kiểm tra nếu vai trò của người dùng là "admin"
-    if (decodeToken.loai_nguoi_dung !== 'admin') {
-      throw new UnauthorizedException(
-        'You are not authorized to access this resource',
-      );
-    }
+    // if (decodeToken.loai_nguoi_dung !== 'admin') {
+    //   throw new UnauthorizedException(
+    //     'You are not authorized to access this resource',
+    //   );
+    // }
 
     return decodeToken;
   }
