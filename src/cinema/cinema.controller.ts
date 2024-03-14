@@ -39,18 +39,4 @@ export class CinemaController {
     return this.cinemaService.layThongTinLichChieuPhim()
   }
   
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cinemaService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCinemaDto: UpdateCinemaDto) {
-    return this.cinemaService.update(+id, updateCinemaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cinemaService.remove(+id);
-  }
 }

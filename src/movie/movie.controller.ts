@@ -56,7 +56,7 @@ export class MovieController {
 
   @Get("/layDanhSachPhim")
   layDanhSachPhim(@Query("tenPhim") tenPhim, @Query("soTrang") soTrang, @Query("soPhanTuTrenTrang") soPhanTuTrenTrang ){
-    return this.movieService.findAll(tenPhim, soTrang, soPhanTuTrenTrang);
+    return this.movieService.findAllFilm(tenPhim, soTrang, soPhanTuTrenTrang);
   }
   @Get("/layDanhSachPhimTheoNgay")
   layDanhSachPhimTheoNgay(@Query("tenPhim") tenPhim,@Query("tuNgay")tuNgay,@Query("denNgay")denNgay ){
@@ -65,12 +65,11 @@ export class MovieController {
 
 
 
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.movieService.findOne(+id);
   }
-  
+
 
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
